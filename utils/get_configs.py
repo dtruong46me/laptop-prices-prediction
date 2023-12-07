@@ -1,4 +1,12 @@
-from bhphotovideo import *
+import os
+import sys
+
+import requests
+from bs4 import BeautifulSoup
+from random import uniform
+from time import sleep
+
+from common import access_website_js_render
 
 def get_config_details_from(url: str) -> dict:
     '''
@@ -13,7 +21,7 @@ def get_config_details_from(url: str) -> dict:
         }
     '''
     specs_url = url + "/specs"
-    raw_content = access_website(url=specs_url)
+    raw_content = access_website_js_render(url=specs_url)
     soup = BeautifulSoup(raw_content, "html.parser")
 
     config_detail = dict()
@@ -53,3 +61,40 @@ def get_config_details_from(url: str) -> dict:
         print("Not found configuration!")
 
     return config_detail
+
+
+if __name__ == '__main__':
+    BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    RAW_DATA_PATH = os.path.join(BASE_PATH,"data", "raw")
+
+    FILEPATH = "bhphotovideo_items.txt"
+    SCRAPING_DATA_PATH = os.path.join(RAW_DATA_PATH, FILEPATH)
+    
+    product_links = []
+    with open(SCRAPING_DATA_PATH, "r") as f:
+        for line in f.readlines():
+            product_links.append(line[:-1])
+    
+    # product_links.__len__() = 1422. So I divide to 9 times for scraping
+    # 1 : [0:150]    # 5 : [601:750]
+    # 2 : [151:300]  # 6 : [751-900]
+    # 3 : [301:450]  # 7 : [901-1050]
+    # 4 : [451:600]  # 8 : [1051-1200]
+    # 9 : [1201-1421]
+
+    product_links = product_links[0:2]
+    stack = product_links.copy()
+
+    all_product_configs = []
+    while stack.__len__() != 0:
+        product_link = stack.pop(0)
+
+        config_detail = get_config_details_from(product_link)
+
+        if config_detail is None:
+            stack.append(product_link)
+        
+        else:
+            all_product_configs.append(config_detail)
+
+    print(all_product_configs)
