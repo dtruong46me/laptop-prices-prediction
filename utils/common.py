@@ -37,13 +37,14 @@ def access_website_js_render(url: str) -> list:
     '''
     RETURN: content <html></html> of website
     '''
-    API_KEY = "ceff3229258c2096cfb481055b4f0d80b86887cd"
+    API_KEY = "c59d4b58cc9c62bbf3a5defcda21e5e769931fb4"
+    # API_KEY = "ceff3229258c2096cfb481055b4f0d80b86887cd"
     PARAMS = {
         "url": url,
         "apikey": API_KEY,
         "js_render": "true", # THIS IS MODIFIED
     }
-
+    
     print(f"Accessing {url}...")
     response = requests.get("https://api.zenrows.com/v1/", params=PARAMS)
     

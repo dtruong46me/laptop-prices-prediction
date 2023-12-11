@@ -1,10 +1,12 @@
 import os
 import sys
+import csv
 
 import requests
 from bs4 import BeautifulSoup
 from random import uniform
 from time import sleep
+from time import time
 
 from common import access_website_js_render
 
@@ -22,6 +24,11 @@ def get_config_details_from(url: str) -> dict:
     '''
     specs_url = url + "/specs"
     raw_content = access_website_js_render(url=specs_url)
+    if raw_content is None:
+        return None
+    
+    sleep(uniform(3,4))
+    
     soup = BeautifulSoup(raw_content, "html.parser")
 
     config_detail = dict()
@@ -50,6 +57,9 @@ def get_config_details_from(url: str) -> dict:
             value_tag = config_tag.find("td", class_="value_KqJ3Q3GPKv")
             value = value_tag.find("span").text
 
+            # if value != "":
+            #     value = " ".join(value.split())
+
             if label not in config_detail.keys():
                 config_detail[label] = value
         
@@ -62,6 +72,22 @@ def get_config_details_from(url: str) -> dict:
 
     return config_detail
 
+def write_to_csv(filepath: str, config_detail: dict):
+    try:
+        header = config_detail.keys()
+
+        with open(filepath, "a", newline='', encoding='utf-8') as file:
+            writer = csv.DictWriter(file, fieldnames=header)
+
+            if file.tell() == 0:
+                writer.writeheader()
+
+            writer.writerow(config_detail)
+
+            print(f" > Successful write {config_detail['Name']}")
+
+    except:
+        print(f"Error to write: {config_detail['Name']}")
 
 if __name__ == '__main__':
     BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -69,6 +95,12 @@ if __name__ == '__main__':
 
     FILEPATH = "bhphotovideo_items.txt"
     SCRAPING_DATA_PATH = os.path.join(RAW_DATA_PATH, FILEPATH)
+
+    # Modify 
+    START_IDX = 598
+    END_IDX = START_IDX + 20
+
+    initial_time = time()
     
     product_links = []
     with open(SCRAPING_DATA_PATH, "r") as f:
@@ -82,19 +114,25 @@ if __name__ == '__main__':
     # 4 : [451:600]  # 8 : [1051-1200]
     # 9 : [1201-1421]
 
-    product_links = product_links[0:2]
+    product_links = product_links[START_IDX-1:END_IDX]
     stack = product_links.copy()
 
-    all_product_configs = []
+    # all_product_configs = []
     while stack.__len__() != 0:
         product_link = stack.pop(0)
 
+        sleep(uniform(1,3))
         config_detail = get_config_details_from(product_link)
 
-        if config_detail is None:
+        if config_detail is None or config_detail.values().__len__() <= 2:
             stack.append(product_link)
         
         else:
-            all_product_configs.append(config_detail)
+            write_to_csv(filepath="bhphotovideo.csv", config_detail=config_detail)
+        
+        print(f"Product remain in stack: {stack.__len__()}")
 
-    print(all_product_configs)
+    final_time = time()
+
+    print(f"Execution time: {(final_time - initial_time)/60:.5f} mins / {len(product_links)} products")
+    print(f"Last index    : {END_IDX}")
