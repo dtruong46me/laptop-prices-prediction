@@ -98,7 +98,7 @@ if __name__ == '__main__':
 
     # Modify 
     START_IDX = 1025
-    END_IDX = START_IDX + 45
+    END_IDX = START_IDX + 40
 
     initial_time = time()
     
