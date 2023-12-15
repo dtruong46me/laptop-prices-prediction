@@ -37,7 +37,7 @@ def access_website_js_render(url: str) -> list:
     '''
     RETURN: content <html></html> of website
     '''
-    API_KEY = "fc66a31b839effaaca0822f09bb895e15856a1e9"
+    API_KEY = "0da8f2a33926d479858ba68f85c2db7c7a016c21"
 
     PARAMS = {
         "url": url,

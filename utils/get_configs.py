@@ -97,8 +97,8 @@ if __name__ == '__main__':
     SCRAPING_DATA_PATH = os.path.join(RAW_DATA_PATH, FILEPATH)
 
     # Modify 
-    START_IDX = 1025
-    END_IDX = START_IDX + 40
+    START_IDX = 1313
+    END_IDX = 1422
 
     initial_time = time()
     
