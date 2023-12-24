@@ -1,18 +1,52 @@
-# THIS IS FOR DEPLOYMENT
 import streamlit as st
-import pandas as pd
 
-st.title('Đây là title')
-st.text('Đây là text.')
-st.markdown('Mark down thì như thế này ')
-st.text('Dưới đây là Latex')
-st.latex(r'''
-            a + ar + a r^2 + a r^3 + \cdots + a r^{n-1} =
-            \sum_{k=0}^{n-1} ar^k =
-            a \left(\frac{1-r^{n}}{1-r}\right)
-            ''')
-st.write(1234)
-st.write(pd.DataFrame({
-                        'first column': [1, 2, 3, 4],
-                        'second column': [10, 20, 30, 40],
-                        }))
+laptop_config = {
+    'Company': ['Apple', 'Dell', 'HP', 'Lenovo'],
+    'CPU': ['i5', 'i7', 'Ryzen 5', 'Ryzen 7'],
+    'RAM': ['8GB', '16GB', '32GB'],
+    'GPU': ['Integrated', 'NVIDIA GTX', 'NVIDIA RTX', 'AMD Radeon'],
+    'Storage': ['256GB SSD', '512GB SSD', '1TB HDD', '1TB SSD']
+}
+
+st.title('Are You Sure Prediction')
+
+st.button("Button thoi :)))")
+
+st.caption("#fromhelaricawithluv")
+
+st.checkbox("I am sure vailon!")
+
+st.code('''def answer_tqk(question: str)
+    if question == "Are you sure?":
+        print("I am sure vailon")''')
+
+company = st.selectbox('Brand', laptop_config['Company'])
+cpu = st.selectbox('CPU', laptop_config['CPU'])
+ram = st.selectbox('RAM', laptop_config['RAM'])
+gpu = st.selectbox('GPU', laptop_config['GPU'])
+storage = st.selectbox('Storage', laptop_config['Storage'])
+
+def predict_price(company, cpu, ram, gpu, storage):
+
+    return 1500000000
+
+
+if st.button('Prediction'):
+    predicted_price = predict_price(company, cpu, ram, gpu, storage)
+    
+    st.success(f'{predicted_price} USD')
+
+    st.camera_input('Camera nek')
+
+st.download_button("Download Button", data="main.py")
+st.code('''st.download_button("Download Button", data="str")
+# data la string, khi download ve se thanh file txt chua doan string do''')
+
+with st.form("This is form"):
+    st.write("Ben trong form nek")
+
+    st.slider("Slider nek", 15, 20)
+
+    st.checkbox("Checkbox nek")
+
+    st.form_submit_button("Submit")
