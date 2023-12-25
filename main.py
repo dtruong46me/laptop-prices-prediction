@@ -1,7 +1,9 @@
 import streamlit as st
 
 laptop_config = {
-    'Company': ['Apple', 'Dell', 'HP', 'Lenovo'],
+    'Company': ['Apple', 'Best Notebooks', 'Microsoft', 'GIGABYTE', 'Panasonic', 'Samsung', 'LG', 'MSI',
+ 'Asus', 'Acer', 'HP', 'Lenovo',
+ 'Dell'],
     'CPU': ['i5', 'i7', 'Ryzen 5', 'Ryzen 7'],
     'RAM': ['8GB', '16GB', '32GB'],
     'GPU': ['Integrated', 'NVIDIA GTX', 'NVIDIA RTX', 'AMD Radeon'],
@@ -22,7 +24,9 @@ st.code('''def answer_tqk(question: str)
 
 company = st.selectbox('Brand', laptop_config['Company'])
 cpu = st.selectbox('CPU', laptop_config['CPU'])
-ram = st.selectbox('RAM', laptop_config['RAM'])
+# ram = st.selectbox('RAM', laptop_config['RAM'])
+
+ram = st.select_slider("RAM", options=['4GB', '8GB', '12GB', '16GB', '32GB', '64GB'])
 gpu = st.selectbox('GPU', laptop_config['GPU'])
 storage = st.selectbox('Storage', laptop_config['Storage'])
 
