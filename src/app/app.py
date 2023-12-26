@@ -1,46 +1,67 @@
 import streamlit as st
 
-laptop_config = {
-    'Brand': ['Dell','Apple', 'Lenovo', 'HP', 'Asus', 'Acer', 'MSI', 'Microsoft', 'Other'],
-    'CPU': ['i5', 'i7', 'Ryzen 5', 'Ryzen 7'],
-    'RAM': ['8GB', '16GB', '32GB'],
-    'GPU': ['Integrated', 'NVIDIA GTX', 'NVIDIA RTX', 'AMD Radeon'],
-    'Storage': ['256GB SSD', '512GB SSD', '1TB HDD', '1TB SSD']
-}
+def predict_price(brand, cpu, gpu, monitor, screen_size, ram, storage, os, weight, model):
+    return f"{brand} {cpu} {gpu} {monitor} {screen_size} {ram} {storage} {os} {weight} {model}"
 
-st.title('Laptop Price Prediction')
+def main():
+    st.title("Laptop Price Prediction")
+    st.caption("Introduction to Data Science")
 
-st.caption("#fromhelaricawithluv")
+    brand = st.selectbox(label="Brand", options=["Apple", "Dell", "Lenovo", "Asus", "Acer", "HP", "Microsoft", "Other"])
 
-company = st.selectbox('Brand', laptop_config['Company'])
-cpu = st.selectbox('CPU', laptop_config['CPU'])
-# ram = st.selectbox('RAM', laptop_config['RAM'])
+    cpu = st.text_input(label="CPU", placeholder="e.g. Intel Iris Xe..", value="Intel Iris Xe")
+    gpu = st.text_input(label="GPU", placeholder="e.g. GeForce GTX 1650..", value="GeForce GTX 1650")
 
-ram = st.select_slider("RAM", options=['4GB', '8GB', '12GB', '16GB', '32GB', '64GB'])
-gpu = st.selectbox('GPU', laptop_config['GPU'])
-storage = st.selectbox('Storage', laptop_config['Storage'])
+    ram_options = ["4GB", "8GB", "12GB", "16GB", "32GB", "64GB", "128GB"]
+    ram_input = st.select_slider("RAM", options=ram_options)
+    if st.checkbox("Or handle RAM by input:", key="ram_checkbox"):
+        ram_input = st.text_input("Enter RAM value:", key="ram_input", placeholder="e.g. 8GB")
 
-def predict_price(company, cpu, ram, gpu, storage):
+    storage_options = ["32GB", "64GB", "128GB", "256GB", "512GB", "1TB", "2TB", "4TB"]
+    storage_input = st.select_slider("Storage", options=storage_options)
+    if st.checkbox("Or handle storage by input:", key="storage_checkbox"):
+        storage_input = st.text_input("Enter storage value:", key="storage_input", placeholder="e.g. 256GB")
 
-    return 1500000000
+    weight_options = [x/100 for x in range(76, 880)]
+    weight_input = st.select_slider(label="Weight", options=weight_options)
+    if st.checkbox("Or handle weight by input:", key="weight_checkbox"):
+        weight_input = st.text_input("Enter weight value:", key="weight_input", placeholder="e.g. 1.78kg")
 
+    monitor_options = [x/10 for x in range(126, 185)]
+    monitor_input = st.select_slider("Monitor", options=monitor_options)
+    if st.checkbox("Or handle monitor by input:", key="monitor_checkbox"):
+        monitor_input = st.text_input("Enter monitor value:", key="monitor_input", placeholder="e.g. 15.6\"")
 
-if st.button('Prediction'):
-    predicted_price = predict_price(company, cpu, ram, gpu, storage)
+    screen_size = st.selectbox("Screen Size", options=["1920x1080", "1K", "2K", "4K"])
+
+    os = st.selectbox(label="Operating System", options=["macOS", "Windows 11", "Windows 11 Home", "Windows 11 Pro", "Windows 10", "Chrome OS", "Other"])
+
     
-    st.success(f'{predicted_price} USD')
+    # Display selected values
+    st.write("___")
+    st.write("Features Summary:")
+    st.table({
+        "Brand": brand,
+        "CPU": cpu,
+        "GPU": gpu,
+        "RAM": ram_input,
+        "Storage": storage_input,
+        "Weight": weight_input,
+        "Monitor": monitor_input,
+        "Screen Size": screen_size,
+        "Operating System": os
+    })
 
-    st.camera_input('Camera nek')
+    st.write("___")
 
-st.download_button("Download Button", data="main.py")
-st.code('''st.download_button("Download Button", data="str")
-# data la string, khi download ve se thanh file txt chua doan string do''')
+    selected_model = st.radio("Select Model", options=["KNN", "SVM", "MLP", "RF"])
 
-with st.form("This is form"):
-    st.write("Ben trong form nek")
+    if st.button('Submit'):
+        predicted_price = predict_price(brand, cpu, gpu, monitor_input, screen_size, ram_input, storage_input, os, weight_input, selected_model)
+        st.success(f'{predicted_price} USD')
+    
+    else:
+        st.success("")
 
-    st.slider("Slider nek", 15, 20)
-
-    st.checkbox("Checkbox nek")
-
-    st.form_submit_button("Submit")
+if __name__ == '__main__':
+    main()
