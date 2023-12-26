@@ -50,6 +50,7 @@ def get_config_details_from(url: str) -> dict:
 
         # pair_KqJ3Q3GPKv keySpec_KqJ3Q3GPKv
         config_tags = soup.find_all("tr", class_="pair_KqJ3Q3GPKv")
+        print(config_tags)
 
         for config_tag in config_tags:
             label, value = "", ""
@@ -64,6 +65,7 @@ def get_config_details_from(url: str) -> dict:
                 config_detail[label] = value
         
         config_detail["Price"] = product_price
+        print(config_detail)
 
         return config_detail
 
@@ -90,15 +92,17 @@ def write_to_csv(filepath: str, config_detail: dict):
         print(f"Error to write: {config_detail['Name']}")
 
 if __name__ == '__main__':
-    BASE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-    RAW_DATA_PATH = os.path.join(BASE_PATH,"data", "raw")
+    BASE_PATH = os.path.join(os.path.dirname(__file__), "..")
+    PARENT_PATH = os.path.join(BASE_PATH, "..")
+    PARENT_PATH = os.path.abspath(os.path.join(PARENT_PATH, ".."))
+    RAW_DATA_PATH = os.path.join(PARENT_PATH,"data", "raw")
 
     FILEPATH = "bhphotovideo_items.txt"
     SCRAPING_DATA_PATH = os.path.join(RAW_DATA_PATH, FILEPATH)
 
     # Modify 
-    START_IDX = 1313
-    END_IDX = 1422
+    START_IDX = 1
+    END_IDX = 3
 
     initial_time = time()
     
@@ -128,7 +132,7 @@ if __name__ == '__main__':
             stack.append(product_link)
         
         else:
-            write_to_csv(filepath="bhphotovideo.csv", config_detail=config_detail)
+            write_to_csv(filepath="bhphotovideo_v2.csv", config_detail=config_detail)
         
         print(f"Product remain in stack: {stack.__len__()}")
 
