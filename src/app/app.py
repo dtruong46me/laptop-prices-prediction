@@ -1,26 +1,16 @@
 import streamlit as st
 
 laptop_config = {
-    'Company': ['Apple', 'Best Notebooks', 'Microsoft', 'GIGABYTE', 'Panasonic', 'Samsung', 'LG', 'MSI',
- 'Asus', 'Acer', 'HP', 'Lenovo',
- 'Dell'],
+    'Brand': ['Dell','Apple', 'Lenovo', 'HP', 'Asus', 'Acer', 'MSI', 'Microsoft', 'Other'],
     'CPU': ['i5', 'i7', 'Ryzen 5', 'Ryzen 7'],
     'RAM': ['8GB', '16GB', '32GB'],
     'GPU': ['Integrated', 'NVIDIA GTX', 'NVIDIA RTX', 'AMD Radeon'],
     'Storage': ['256GB SSD', '512GB SSD', '1TB HDD', '1TB SSD']
 }
 
-st.title('Are You Sure Prediction')
-
-st.button("Button thoi :)))")
+st.title('Laptop Price Prediction')
 
 st.caption("#fromhelaricawithluv")
-
-st.checkbox("I am sure vailon!")
-
-st.code('''def answer_tqk(question: str)
-    if question == "Are you sure?":
-        print("I am sure vailon")''')
 
 company = st.selectbox('Brand', laptop_config['Company'])
 cpu = st.selectbox('CPU', laptop_config['CPU'])
