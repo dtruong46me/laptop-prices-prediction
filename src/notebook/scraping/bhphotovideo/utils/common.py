@@ -37,7 +37,7 @@ def access_website_js_render(url: str) -> list:
     '''
     RETURN: content <html></html> of website
     '''
-    API_KEY = "0da8f2a33926d479858ba68f85c2db7c7a016c21"
+    API_KEY = "e73e258b4e826462018494c03e029bb203e126af"
 
     PARAMS = {
         "url": url,
@@ -47,7 +47,10 @@ def access_website_js_render(url: str) -> list:
     
     print(f"Accessing {url}...")
     response = requests.get("https://api.zenrows.com/v1/", params=PARAMS)
-    
+    wait_ = uniform(3,5)
+    print(f"Waiting {wait_}s...")
+    sleep(wait_)
+
     if response.status_code == 200:
         print(f"\033[92mSuccessful access\033[00m {url}")
     
@@ -57,9 +60,6 @@ def access_website_js_render(url: str) -> list:
     
     response.close()
 
-    wait_ = uniform(3,5)
-    print(f"Waiting {wait_}s...")
-    sleep(wait_)
     return response.content
 
 
