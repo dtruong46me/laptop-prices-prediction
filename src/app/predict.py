@@ -30,19 +30,6 @@ def predict(model_name: pk.Pickler,
     name_cpu, cpu_mark = get_cpu_name(cpu_name)
     name_gpu, gpu_mark = get_gpu_name(gpu_name)
 
-    # Monitor to Float
-    if "\"" in monitor or "\'" in monitor:
-        elements = monitor.split()
-        if len(elements) == 2:
-            pros_monitor, _ = elements[0], elements[1]
-            pros_monitor = float(pros_monitor[:-1])
-
-        if len(elements) == 1:
-            monitor = elements[0]
-            pros_monitor = float(pros_monitor[:-1])
-    else:
-        pros_monitor = float(monitor[:-1])
-
     # Monitor size
     width, height = [float(x.strip()) for x in monitor_size.split("x")]
 
