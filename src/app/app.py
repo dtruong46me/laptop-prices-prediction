@@ -1,46 +1,57 @@
 import streamlit as st
 
-laptop_config = {
-    'Brand': ['Dell','Apple', 'Lenovo', 'HP', 'Asus', 'Acer', 'MSI', 'Microsoft', 'Other'],
-    'CPU': ['i5', 'i7', 'Ryzen 5', 'Ryzen 7'],
-    'RAM': ['8GB', '16GB', '32GB'],
-    'GPU': ['Integrated', 'NVIDIA GTX', 'NVIDIA RTX', 'AMD Radeon'],
-    'Storage': ['256GB SSD', '512GB SSD', '1TB HDD', '1TB SSD']
-}
-
-st.title('Laptop Price Prediction')
-
-st.caption("#fromhelaricawithluv")
-
-company = st.selectbox('Brand', laptop_config['Company'])
-cpu = st.selectbox('CPU', laptop_config['CPU'])
-# ram = st.selectbox('RAM', laptop_config['RAM'])
-
-ram = st.select_slider("RAM", options=['4GB', '8GB', '12GB', '16GB', '32GB', '64GB'])
-gpu = st.selectbox('GPU', laptop_config['GPU'])
-storage = st.selectbox('Storage', laptop_config['Storage'])
-
-def predict_price(company, cpu, ram, gpu, storage):
-
-    return 1500000000
-
-
-if st.button('Prediction'):
-    predicted_price = predict_price(company, cpu, ram, gpu, storage)
+def predict_price(brand="Apple", cpu="Intel Iris Xe", gpu="GeForce GTX 1650", monitor="15.6\"", screen_size="11920x1080", ram="8GB", storage="256GB", os="macOS", weight="1.78kg", model="RF"):
+    predicted = 195
     
-    st.success(f'{predicted_price} USD')
+    return brand, cpu, gpu, monitor, screen_size, ram, storage, os, weight, model, predicted
 
-    st.camera_input('Camera nek')
+def main():
+    st.title("Laptop Price Prediction")
+    st.caption("Introduction to Data Science")
 
-st.download_button("Download Button", data="main.py")
-st.code('''st.download_button("Download Button", data="str")
-# data la string, khi download ve se thanh file txt chua doan string do''')
+    brand = st.selectbox(label="Brand", options=["Apple", "Dell", "Lenovo", "Asus", "Acer", "HP", "Microsoft", "Other"])
+    os = st.selectbox(label="Operating System", options=["macOS", "Windows 11", "Windows 11 Home", "Windows 11 Pro", "Windows 10", "Chrome OS", "Other"])
 
-with st.form("This is form"):
-    st.write("Ben trong form nek")
+    cpu = st.text_input(label="CPU", placeholder="e.g. Intel Iris Xe..", value="Intel Iris Xe")
+    gpu = st.text_input(label="GPU", placeholder="e.g. GeForce GTX 1650..", value="GeForce GTX 1650")
 
-    st.slider("Slider nek", 15, 20)
+    
+    ram_input = st.text_input("Enter RAM value:", key="ram_input", placeholder="e.g. 8GB")
 
-    st.checkbox("Checkbox nek")
+    storage_input = st.text_input("Enter storage value:", key="storage_input", placeholder="e.g. 256GB")
 
-    st.form_submit_button("Submit")
+    weight_input = st.text_input("Enter weight value:", key="weight_input", placeholder="e.g. 1.78kg")
+
+    monitor_input = st.text_input("Enter monitor value:", key="monitor_input", placeholder="e.g. 15.6\"")
+
+    screen_size = st.text_input("Enter screen_size value:", key="screen_size_input", placeholder="e.g. 1920x1080")
+    
+    # Display selected values
+    st.write("___")
+    
+    selected_model = "RF"
+
+    if st.button('Submit'):
+        brand, cpu, gpu, monitor, screen_size, ram, storage, os, weight, model, predicted = predict_price(brand, cpu, gpu, monitor_input, screen_size, ram_input, storage_input, os, weight_input, selected_model)
+        st.success(f'{predicted} USD')
+
+        st.write("Features Summary:")
+        st.table({
+            "Brand": brand,
+            "CPU": cpu,
+            "GPU": gpu,
+            "RAM": ram,
+            "Storage": storage,
+            "Weight": weight,
+            "Monitor": monitor,
+            "Screen Size": screen_size,
+            "Operating System": os
+        })
+
+        st.write("___")
+    
+    else:
+        st.success("")
+
+if __name__ == '__main__':
+    main()
