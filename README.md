@@ -6,10 +6,12 @@ The objective of this project are **analyze laptop prices** in 2023 based on dat
 - **Output**: Price
 
 - **Demo**:
-[](assets/demo.png)
+
+![](assets/demo.png)
 
 - **Results**:
-[](assets/result.png)
+
+![](assets/result.png)
 
 ## Installation
 
@@ -29,7 +31,7 @@ The objective of this project are **analyze laptop prices** in 2023 based on dat
     ```
 
 > [!NOTE]  
-> If you have trouble in install `streamlit` library, you can 
+> If you have trouble installing `streamlit` library, please refer to this [tutorial](https://youtu.be/aIk1WpRJZzA?si=oVIpYmCh1oIcLiWF)
 
 ## Contributions
 |Name|Student ID|Email|
@@ -39,3 +41,5 @@ The objective of this project are **analyze laptop prices** in 2023 based on dat
 |Vu Tuan Minh|20210597|minh.vt210597@sis.hust.edu.vn|
 |Bui Minh Quang|20214925|quang.bm214925@sis.hust.edu.vn|
 |Phan Dinh Truong|20214937|truong.pd214937@sis.hust.edu.vn|
+
+## References
