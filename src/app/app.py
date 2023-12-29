@@ -3,7 +3,10 @@ import pickle as pk
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 import joblib
-from notebook.modeling.predict_price import *
+import sys
+import os
+
+from predict_price import *
 
 def main():
     st.title("Laptop Price Prediction")
@@ -115,13 +118,12 @@ def main():
                                    weight=str(weight_input))
         st.dataframe(df)
         
-        MODELNAME = "knn_default_model.pkl"
+        MODELNAME = "knn_model.pkl"
         PARENT_DIR = os.path.abspath(os.path.dirname(__file__))
+        print(PARENT_DIR)
         MODEL_PATH = os.path.abspath(os.path.join(PARENT_DIR, MODELNAME))
 
-        MODEL = joblib.load(MODEL_PATH)
-
-        price = predict_price(df, MODEL)
+        price = knn_predict_price(df, MODEL_PATH)
         st.success(f'{price} USD')
 
     else:
