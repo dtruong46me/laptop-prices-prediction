@@ -7,6 +7,7 @@ import sys
 import os
 
 from predict_price import *
+from rf_predict_price import *
 
 def main():
     st.title("Laptop Price Prediction")
@@ -106,6 +107,8 @@ def main():
 
     st.write("___")
 
+    model_name = st.radio("Model", options=["Random Forest", "K-Nearest Neighbor"])
+
     if st.button('Submit'):
         df = transfer_to_df(brand=brand_input,
                                    cpu=cpu_input,
@@ -116,15 +119,20 @@ def main():
                                    storage=storage_input,
                                    os=os_input,
                                    weight=str(weight_input))
-        st.dataframe(df)
+        # st.dataframe(df)
         
-        MODELNAME = "knn_model.pkl"
-        PARENT_DIR = os.path.abspath(os.path.dirname(__file__))
-        print(PARENT_DIR)
-        MODEL_PATH = os.path.abspath(os.path.join(PARENT_DIR, MODELNAME))
+        MODELNAME = "knn_model_2.pkl"
+        MODEL_PATH = os.path.abspath(os.path.join(os.path.join(os.path.dirname(__file__)), MODELNAME))
 
-        price = knn_predict_price(df, MODEL_PATH)
-        st.success(f'{price} USD')
+        SCALERNAME = "save_scaler.pkl"
+        SCALER_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), SCALERNAME))
+        
+        if model_name == 'K-Nearest Neighbor':
+            price = knn_predict_price(df, MODEL_PATH, SCALER_PATH)
+
+        if model_name == 'Random Forest':
+            price = rf_predict_price(brand_input, cpu_input, gpu_input, str(monitor_input), resolution_input, ram_input, storage_input, os_input, str(weight_input))
+        st.success(f'{price:.2f} USD')
 
     else:
         st.success("0 USD")
