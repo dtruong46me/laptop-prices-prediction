@@ -1,57 +1,131 @@
 import streamlit as st
-
-def predict_price(brand="Apple", cpu="Intel Iris Xe", gpu="GeForce GTX 1650", monitor="15.6\"", screen_size="11920x1080", ram="8GB", storage="256GB", os="macOS", weight="1.78kg", model="RF"):
-    predicted = 195
-    
-    return brand, cpu, gpu, monitor, screen_size, ram, storage, os, weight, model, predicted
+import pickle as pk
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+import joblib
+from notebook.modeling.predict_price import *
 
 def main():
     st.title("Laptop Price Prediction")
     st.caption("Introduction to Data Science")
 
-    brand = st.selectbox(label="Brand", options=["Apple", "Dell", "Lenovo", "Asus", "Acer", "HP", "Microsoft", "Other"])
-    os = st.selectbox(label="Operating System", options=["macOS", "Windows 11", "Windows 11 Home", "Windows 11 Pro", "Windows 10", "Chrome OS", "Other"])
-
-    cpu = st.text_input(label="CPU", placeholder="e.g. Intel Iris Xe..", value="Intel Iris Xe")
-    gpu = st.text_input(label="GPU", placeholder="e.g. GeForce GTX 1650..", value="GeForce GTX 1650")
-
+    # Brand & OS
+    BRAND_OPTIONS = ["Apple", "Dell", "Lenovo", "HP", "Asus", "Acer", "MSI", "Microsoft", "Other"]
+    OS_OPTIONS = ["macOS", "Windows 11", "Windows 11 Home", "Windows 11 Pro", "Windows 10", "Chrome OS", "Other"]
+    brd_col, ops_col = st.columns(2)
+    with brd_col:
+        brand_input = st.selectbox(label="Brand", options=BRAND_OPTIONS)
+        if brand_input=="Other":
+            brand_input = st.text_input("Brand")
+            if brand_input == "":
+                brand_input = "Dell"
     
-    ram_input = st.text_input("Enter RAM value:", key="ram_input", placeholder="e.g. 8GB")
+    with ops_col:
+        os_input = st.selectbox(label="Operating System", options=OS_OPTIONS)
+        if os_input=="Other":
+            os_input = st.text_input("Operating System")
+            if os_input == "":
+                os_input = "Windows 11"
 
-    storage_input = st.text_input("Enter storage value:", key="storage_input", placeholder="e.g. 256GB")
+    # CPU & GPU Input
+    cpu_input = st.text_input(label="CPU", placeholder="e.g. Intel Core i7 12700H..")
+    gpu_input = st.text_input(label="GPU", placeholder="e.g. Intel Iris Xe..")
 
-    weight_input = st.text_input("Enter weight value:", key="weight_input", placeholder="e.g. 1.78kg")
-
-    monitor_input = st.text_input("Enter monitor value:", key="monitor_input", placeholder="e.g. 15.6\"")
-
-    screen_size = st.text_input("Enter screen_size value:", key="screen_size_input", placeholder="e.g. 1920x1080")
+    # RAM
+    RAM_OPTIONS = ["4GB", "8GB", "16GB", "32GB",  "64GB", "128GB", "256GB", "Other"]
+    STORAGE_OPTIONS = ["64GB", "128GB", "256GB", "512GB", "1TB", "2TB", "4TB", "Other"]
+    ram_col, stg_col = st.columns(2)
+    with ram_col:
+        ram_input = st.selectbox("RAM", options=RAM_OPTIONS)
+        if ram_input=="Other":
+            rcol1, rcol2 = st.columns([1,3])
+            with rcol1:
+                rtype = st.selectbox("Unit", options=["GB", "TB"])
+            with rcol2:
+                rvalue = st.text_input("Enter RAM value", placeholder="e.g. 24")
+                if rvalue == "":
+                    rvalue = "2"
+            ram_input = str(rvalue) + rtype
     
+    with stg_col:
+        storage_input = st.selectbox("Storage", options=STORAGE_OPTIONS)
+        if storage_input=="Other":
+            scol1, scol2 = st.columns([1,3])
+            with scol1:
+                stype = st.selectbox("Unit", options=["GB", "TB"])
+            with scol2:
+                svalue = st.text_input("Enter Storage value", placeholder="e.g. 192")
+                if svalue == "":
+                    svalue == "2"
+
+            storage_input = str(svalue) + stype
+
+    # Screen Size
+    SCREEN_SIZE_OPTIONS = ["1366x768", "1600x900", "1920x1080", "1920x1200", "2560x1440", "2560x1600", "3024x1964", "3072x1920", "3840x2160", "3840x2400", "Other"]
+    resolution_input = st.selectbox("Resolution", options=SCREEN_SIZE_OPTIONS)
+    if resolution_input == "Other":
+        wcol, hcol = st.columns(2)
+        with wcol:
+            width = st.text_input("Width (pixels)", placeholder="e.g. 1920")
+            if width == "":
+                width = 1920
+        with hcol:
+            height = st.text_input("Height (pixels)", placeholder="e.g. 1080")
+            if height == "":
+                height = 1080
+        resolution_input = str(width) + "x" + str(height)
+    
+    # Monitor 
+    MONITOR_OPTIONS = [x / 10 for x in range(106, 200)]
+    monitor_input = st.select_slider("Monitor", options=MONITOR_OPTIONS)
+
+    WEIGHT_RANGE = [x / 100 for x in range(32, 860)]
+    weight_input = st.select_slider("Weight", WEIGHT_RANGE)
+
     # Display selected values
     st.write("___")
-    
-    selected_model = "RF"
+    st.write("Features Summary:")
+    if cpu_input == "":
+        cpu_input = "Intel Core i7 12700H"
+    if gpu_input == "":
+        gpu_input = "Intel Iris Xe"
+    st.table({
+        "Brand": brand_input,
+        "Operating System": os_input,
+        "CPU": cpu_input,
+        "GPU": gpu_input,
+        "RAM": ram_input,
+        "Storage": storage_input,
+        "Monitor": str(monitor_input) + "\"",
+        "Resolution": resolution_input,
+        "Weight": str(weight_input) + "kg"
+    })
+
+    st.write("___")
 
     if st.button('Submit'):
-        brand, cpu, gpu, monitor, screen_size, ram, storage, os, weight, model, predicted = predict_price(brand, cpu, gpu, monitor_input, screen_size, ram_input, storage_input, os, weight_input, selected_model)
-        st.success(f'{predicted} USD')
+        df = transfer_to_df(brand=brand_input,
+                                   cpu=cpu_input,
+                                   gpu=gpu_input,
+                                   monitor=str(monitor_input),
+                                   resolution=resolution_input,
+                                   ram=ram_input,
+                                   storage=storage_input,
+                                   os=os_input,
+                                   weight=str(weight_input))
+        st.dataframe(df)
+        
+        MODELNAME = "knn_default_model.pkl"
+        PARENT_DIR = os.path.abspath(os.path.dirname(__file__))
+        MODEL_PATH = os.path.abspath(os.path.join(PARENT_DIR, MODELNAME))
 
-        st.write("Features Summary:")
-        st.table({
-            "Brand": brand,
-            "CPU": cpu,
-            "GPU": gpu,
-            "RAM": ram,
-            "Storage": storage,
-            "Weight": weight,
-            "Monitor": monitor,
-            "Screen Size": screen_size,
-            "Operating System": os
-        })
+        MODEL = joblib.load(MODEL_PATH)
 
-        st.write("___")
-    
+        price = predict_price(df, MODEL)
+        st.success(f'{price} USD')
+
     else:
-        st.success("")
+        st.success("0 USD")
 
 if __name__ == '__main__':
     main()

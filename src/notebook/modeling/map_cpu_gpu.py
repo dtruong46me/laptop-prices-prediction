@@ -4,7 +4,7 @@ import pandas as pd
 from fuzzywuzzy import fuzz
 
 PARENT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-PARENT_PATH = os.path.abspath(os.path.join(PARENT_PATH, '..'))
+PARENT_PATH = os.path.abspath(os.path.join(PARENT_PATH, '..', '..'))
 DATA_PATH = os.path.abspath(os.path.join(PARENT_PATH, "data", "raw", "cpu_gpu_mark"))
 
 CPU_FILENAME = "cpu_mark.csv"
@@ -43,5 +43,6 @@ def get_gpu_name(gpu):
 if __name__ == '__main__':
     TEST_CPU_NAME = 'Intel core i5 1155g7'
 
-    _, cpu_mark = get_cpu_name(TEST_CPU_NAME)
+    b, cpu_mark = get_cpu_name(TEST_CPU_NAME)
     print(cpu_mark)
+    print(b)
