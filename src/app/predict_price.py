@@ -82,14 +82,19 @@ def transfer_to_df(brand,
 
     return df
 
-def knn_predict_price(new_data: pd.DataFrame, model_path):
+def knn_predict_price(new_data: pd.DataFrame, model_path, scaler_path):
     try:
         knn = joblib.load(open(model_path, "rb"))
+        scaler = joblib.load(open(scaler_path, "rb"))
 
         print(new_data)
+        columns_to_scale = ["Weight", "Monitor", "RAM", "Storage Amount", "GPU Mark", "Width", "Height", "CPU Mark"]
+        new_data_scaled = pd.DataFrame(scaler.transform(new_data[columns_to_scale]), columns=columns_to_scale)
+        new_data[columns_to_scale] = new_data_scaled
+
         y_pred = knn.predict(new_data)
         print(new_data)
-        print(y_pred)
+        print(f"Predicted Price: {y_pred[0]}")
     
     except FileNotFoundError as e:
         print(f"Error: {e}")
@@ -100,9 +105,9 @@ def knn_predict_price(new_data: pd.DataFrame, model_path):
 
 
 if __name__=="__main__":
-    BRAND = "ASUS"
-    CPU = "Intel Core i5-12500H"
-    GPU = " GeForce RTX 3050"
+    BRAND = "Apple"
+    CPU = "Intel Core i7 12700H"
+    GPU = "Intel Iris Xe"
     MONITOR = "17.3"
     RESOLUTION = "1920x1080"
     RAM = "16GB"
@@ -110,8 +115,8 @@ if __name__=="__main__":
     OS = "Windows 11 Home 64-bit"
     WEIGHT = "2.60"
 
-    # SCALER_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "knn_default_scaler.pkl"))
-    MODELPATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "knn_model.pkl"))
+    MODELPATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "knn_model_2.pkl"))
+    SCALER_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "save_scaler.pkl"))
 
     new_data = transfer_to_df(brand=BRAND,
                           cpu=CPU,
@@ -123,8 +128,9 @@ if __name__=="__main__":
                           os=OS,
                           weight=WEIGHT)
     
+    print("Unscaled Data:")
     print(new_data)
 
-    y_hat = knn_predict_price(new_data=new_data, model_path=MODELPATH)
+    y_hat = knn_predict_price(new_data=new_data, model_path=MODELPATH, scaler_path=SCALER_PATH)
     print(y_hat)
     print(type(y_hat))
