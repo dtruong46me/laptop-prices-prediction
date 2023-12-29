@@ -1,15 +1,41 @@
 ## Problem Description
+The objective of this project are **analyze laptop prices** in 2023 based on data scraped from multiple websites and **predict a product's price** from a given set of input
 
-## Data
+- **Input**: Brand, CPU, GPU, RAM, Storage,...
 
-## Model
+- **Output**: Price
 
-## Evaluation
+- **Demo**:
+[](assets/demo.png)
+
+- **Results**:
+[](assets/result.png)
 
 ## Installation
 
-## Contribution
+1. Open terminal and clone the project
+    ```
+    https://github.com/dncq/laptop-prices-analysis.git
+    ```
 
+2. Open terminal and install libraries
+    ```
+    pip install requirements.txt
+    ```
+
+3. Run Streamlit on `/laptop-prices-analysis> `
+    ```
+    streamlit run main.py
+    ```
+
+> [!NOTE]  
+> If you have trouble in install `streamlit` library, you can 
+
+## Contributions
 |Name|Student ID|Email|
-|:-:|:-:|:-:|
-|Dinh Nguyen Cong Quy (C)|20214927|quy.dnc
+|-|:-:|-|
+|Dinh Nguyen Cong Quy (C)|20214927|quy.dnc214927@sis.hust.edu.vn|
+|Le Tuan Anh|20214874|anh.lt214874@sis.hust.edu.vn|
+|Vu Tuan Minh|20210597|minh.vt210597@sis.hust.edu.vn|
+|Bui Minh Quang|20214925|quang.bm214925@sis.hust.edu.vn|
+|Phan Dinh Truong|20214937|truong.pd214937@sis.hust.edu.vn|

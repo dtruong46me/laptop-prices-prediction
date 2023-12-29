@@ -6,10 +6,12 @@ import joblib
 import sys
 import os
 
+path = os.path.abspath(os.path.dirname(__file__))
+sys.path.insert(0, path)
 from predict_price import *
 from rf_predict_price import *
 
-def main():
+def gui_app():
     st.title("Laptop Price Prediction")
     st.caption("Introduction to Data Science")
 
@@ -138,4 +140,4 @@ def main():
         st.success("0 USD")
 
 if __name__ == '__main__':
-    main()
+    gui_app()
