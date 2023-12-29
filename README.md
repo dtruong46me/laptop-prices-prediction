@@ -11,12 +11,6 @@ The objective of this project are **analyze laptop prices** in 2023 based on dat
 - **Results**:
 [](assets/result.png)
 
-## Data
-
-## Model
-
-## Evaluation
-
 ## Installation
 
 1. Open terminal and clone the project
