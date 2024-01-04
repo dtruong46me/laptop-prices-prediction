@@ -3,9 +3,8 @@ import os
 import pandas as pd
 from fuzzywuzzy import fuzz
 
-PARENT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-PARENT_PATH = os.path.abspath(os.path.join(PARENT_PATH, '..'))
-DATA_PATH = os.path.abspath(os.path.join(PARENT_PATH, "data", "raw", "cpu_gpu_mark"))
+PARENT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+DATA_PATH = os.path.abspath(os.path.join(PARENT_PATH, "Data", "raw", "cpu_gpu_mark"))
 
 CPU_FILENAME = "cpu_mark.csv"
 GPU_FILENAME = "gpu_mark.csv"
